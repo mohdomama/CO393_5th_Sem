@@ -1,10 +1,11 @@
 #include <iostream>
 #include <algorithm>
 
+#include <bits/stdc++.h>
+
 using namespace std;
 
-class Dijsktra
-{
+class Dijsktra {
 private:
 	int **matrix;
 	int size, source, dest;
@@ -119,17 +120,23 @@ public:
 	}
 
 	void print_path() {
+		stack<int> path;
 		int point = dest;
-		cout << point;
+
+		path.push(point);
 		while(point != source) {
 			for (int i = 0; i < size; ++i){
-				int inter_pt_dis = matrix[point][i];
+				int inter_pt_dis = matrix[i][point];
 				if (inter_pt_dis != 0 && min_dis[i] + inter_pt_dis == min_dis[point]){
 					point = i;
+					path.push(point);	
 					break;
 				}
 			}
-			cout << " <-- " << point;
+		}
+		while(!path.empty()) {
+			cout << path.top() << "  ";
+			path.pop();
 		}
 		cout << endl;
 	}
