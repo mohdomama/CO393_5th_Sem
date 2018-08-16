@@ -49,6 +49,17 @@ public class BCDCounter {
 		}
 	}
 
+	public Boolean getBit(int i){
+		return bits[i];
+	}
+
+	public void reset() {
+		for (int i = 0; i < 4 ; i++) {
+			ff[i].operate(false, true);
+			bits[i] = ff[i].getQ();
+		}
+	}
+
 	public static void main(String[] args) {
 		BCDCounter bcdCounter = new BCDCounter();
 		Gui gui = new Gui(bcdCounter);
@@ -88,10 +99,7 @@ class Gui {
 
 	private JFrame frame;
 
-	private JLabel bit1;
-	private JLabel bit2; 
-	private JLabel bit3; 
-	private JLabel bit4; 
+	private JLabel[] bitsLabel = new JLabel[4]; 
 	private JLabel decimal;
 	private JLabel tagDec;
 	private JLabel tagBin;
@@ -100,6 +108,7 @@ class Gui {
 	private JButton reset;
 
 	private BCDCounter bcdCounter;
+	private HashMap<Boolean, String> map = new HashMap<Boolean, String>(); 
 
 	private int buttonL = 100;
 	private int buttonH = 30;
@@ -108,10 +117,9 @@ class Gui {
 	Gui(BCDCounter bcdCounter) {
 		frame = new JFrame("BCD Counter");
 
-		bit1 = new JLabel("0");
-		bit2 = new JLabel("0");
-		bit3 = new JLabel("0");
-		bit4 = new JLabel("0");
+		for (int i = 0; i < 4; i++) {
+			bitsLabel[i] = new JLabel("0");
+		}
 		decimal = new JLabel("0");
 		tagDec = new JLabel("Decimal:");
 		tagBin = new JLabel("BCD:");
@@ -120,6 +128,8 @@ class Gui {
 		reset = new JButton("Reset");
 
 		this.bcdCounter = bcdCounter;
+		map.put(true, "1");
+		map.put(false, "0");
 	}
 
 	public JFrame draw() {
@@ -130,10 +140,9 @@ class Gui {
 		decimal.setBounds(300,100,labelSize,labelSize);
 
 		tagBin.setBounds(250, 350, buttonL, buttonH);
-		bit1.setBounds(100,400,labelSize,labelSize);
-		bit2.setBounds(200,400,labelSize,labelSize);
-		bit3.setBounds(300,400,labelSize,labelSize);
-		bit4.setBounds(400,400,labelSize,labelSize);
+		for (int i = 3; i >= 0 ; i--) {
+			bitsLabel[i].setBounds(400 - (i)*100, 400, labelSize, labelSize);
+		}
 		
 
 		frame.setLayout(null);
@@ -141,10 +150,8 @@ class Gui {
 		frame.setSize(500,500);
 		frame.setLocationRelativeTo(null);
 		
-		frame.add(bit1);
-		frame.add(bit2);
-		frame.add(bit3);
-		frame.add(bit4);
+		for(int i = 0; i < 4; i++)
+			frame.add(bitsLabel[i]);
 
 		frame.add(tagDec);
 		frame.add(tagBin);
@@ -160,6 +167,13 @@ class Gui {
 			}
 		});
 
+		reset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				resetAction();
+			}
+		});
+
 		frame.setVisible(true);
 
 
@@ -170,5 +184,28 @@ class Gui {
 	public void countAction() {
 		bcdCounter.count();
 		bcdCounter.print();
+		alterDisplay();
+	}
+
+	public void resetAction() {
+		bcdCounter.reset();
+		bcdCounter.print();
+		alterDisplay();
+	}
+
+	public String getDecimalString() {
+		String bitString = "";
+		for (int i = 3; i >= 0; i-- ) {
+			bitString += map.get(bcdCounter.getBit(i));
+		}
+		String decimalString = Integer.toString(Integer.parseInt(bitString, 2));
+		return decimalString;
+	}
+
+	public void alterDisplay() {
+		for (int i = 0; i < 4 ; i++ ) {
+			bitsLabel[i].setText(map.get(bcdCounter.getBit(i)));
+		}
+		decimal.setText(getDecimalString());
 	}
 }
