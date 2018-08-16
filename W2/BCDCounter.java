@@ -125,7 +125,7 @@ class Gui {
 		tagDec = new JLabel("Decimal:");
 		tagBin = new JLabel("BCD:");
 
-		counter = new JButton("Count");
+		counter = new JButton("Pulse");
 		reset = new JButton("Reset");
 
 		this.bcdCounter = bcdCounter;
