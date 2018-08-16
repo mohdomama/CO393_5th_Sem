@@ -68,11 +68,12 @@ public class BCDCounter {
 }
 
 class SrFlipFlop {
+	// Using NOR gate
 	private Boolean s,r,q;
 
 	SrFlipFlop() {
-		s = true;
-		r = true;
+		s = false;
+		r = false;
 		q = false;
 	}
 
@@ -86,8 +87,8 @@ class SrFlipFlop {
 		if (!s && r) 
 			q = false;
 
-		//else if (!s && !r) 
-		//	System.out.println("Unstable");
+		else if (s && r) 
+			System.out.println("Unstable");
 	}
 
 	public Boolean getQ() {
