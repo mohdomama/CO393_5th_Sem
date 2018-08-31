@@ -194,7 +194,7 @@ public:
 			}
 			patLogic.push_back(x);
 		}
-		cout << "\nPat logic is: " << patLogic.size()<< endl;
+		cout << "\nPat logic is: " << endl;
 		for (int i = 0; i < patLogic.size(); ++i){
 			set<int > :: iterator itr;  // convert set to vector
 			for (itr = patLogic[i].begin(); itr != patLogic[i].end(); ++itr){
