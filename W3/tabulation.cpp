@@ -7,6 +7,9 @@
 using namespace std;
 
 class Util{
+	/*
+	A class that contains utility functions required in the program.
+	*/
 public:
 	string intToBinString(int size, int val){
 		string bin;
@@ -16,6 +19,7 @@ public:
 	}
 
 	int get1s(string x) {
+		// returns the number of 1s in a binary string
 		int count = 0;
 		for (int i = 0; i < x.size(); ++i){
 			if (x[i] == '1')
@@ -25,6 +29,7 @@ public:
 	}
 
 	bool compare(string a, string b) {
+		// checks if two string differ at exactly one location or not
 		int count = 0;
 		for(int i = 0; i < a.length(); i++) {
 			if (a[i]!=b[i])
@@ -38,7 +43,7 @@ public:
 	}
 
 	string getDiff(string a, string b) {
-
+		// returs a string that replaces the differ location of two strings with '-'
 		for(int i = 0; i < a.length(); i++) {
 			if (a[i]!=b[i])
 				a[i]='-';
@@ -57,6 +62,7 @@ public:
 	}
 
 	string binToString(string x){
+		// converts binary string to alphabetic variables
 		string out = "";
 		for (int i = 0; i < x.size(); ++i){
 			if (x[i]=='1') {
@@ -73,6 +79,7 @@ public:
 	}
 
 	bool primeIncludes(string imp, string minTerm){
+		// check is a prime implicant satisfies a min term or not
 		for (int i = 0; i < imp.size(); ++i){
 			if (imp[i]!='-'){
 				if(imp[i]!=minTerm[i]){
@@ -84,6 +91,7 @@ public:
 	}
 
 	int getVar(set<int> comb, vector<string> primeImp){
+		// returns the number of variables in a petrick method combination
 		int count = 0;
 		set<int> :: iterator itr;
 		for (itr = comb.begin(); itr != comb.end(); ++itr){
@@ -106,7 +114,7 @@ private:
  	vector< string > minBin; // min terms in binary
  	int nBits;
  	int nMin;  // no of variables
- 	vector< vector< string> > table;
+ 	vector< vector< string> > table; 
  	vector< string > primeImp;
  	vector< set<int> > functions;
  	
@@ -140,6 +148,8 @@ public:
 		set< string > primeImpTemp;
 		createTable();
 		cout << "\nGetting Prime Implicants.." << endl;
+
+		// Combine consecutive terms in the table until its empty
 		while (!util.checkEmpty(table)){
 			table = combinePairs(table, primeImpTemp);
 		}
@@ -158,7 +168,7 @@ public:
 	}
 
 	void minimise() {
-		// prepare chart
+		// prepare primeImp chart
 		bool primeImpChart[primeImp.size()][nMin] = {{false}};
 
 		for (int i = 0; i < primeImp.size(); ++i){
@@ -167,7 +177,7 @@ public:
 			}
 		}
 
-		 cout << "\nPrime implicants chart (rows: prime implicant no., col: minterm no.):" << endl;
+		cout << "\nPrime implicants chart (rows: prime implicant no., col: minterm no.):" << endl;
 		for (int i = 0; i < primeImp.size(); ++i){
 			for (int j = 0; j < nMin; ++j){
 		 		if (primeImpChart[i][j] == true){
@@ -204,7 +214,7 @@ public:
 		// get all possible combinations
 		set< set<int> > posComb;
 		set<int> prod;
-		getPosComb(patLogic, 0, prod, posComb);
+		getPosComb(patLogic, 0, prod, posComb); // recursively multiply set elements
 		int min = 9999;
 
 		cout << "\nPossible combinations that satisfy all minterms:" << endl;
@@ -249,6 +259,7 @@ public:
 	}
 
 	void displayFunctions() {
+		// prints output
 		cout << "\n\nThe possible functions are-\n" << endl;
 		for (int i = 0; i < functions.size(); ++i){
 			set<int> function = functions[i]; 
@@ -263,19 +274,18 @@ public:
 	}
 
 	void getPosComb(vector< set<int> > &patLogic, int level, set<int> prod, set< set<int> > &posComb) {
-		
+		// a recursive function to multiple elements of set patLogic and store it in set posComb
 		if (level == patLogic.size()){
 			set<int> x = prod;
 			posComb.insert(x);
 			return;
 		}
 		else{
-			set<int > :: iterator itr;  // convert set to vector
+			set<int > :: iterator itr;  
 			for (itr = patLogic[level].begin(); itr != patLogic[level].end(); ++itr){
 
 				int x = *itr;
 	        	bool inserted = prod.insert(x).second;
-	        	//cout << "At level " << level << " inserting " << x << endl;
 	        	getPosComb(patLogic, level+1, prod, posComb);
 	        	if (inserted){
 	        		prod.erase(x);
@@ -329,7 +339,6 @@ public:
 	}
 
 };
-
 
 int main()  {
 	Tabulation tab;
