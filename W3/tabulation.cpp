@@ -73,16 +73,13 @@ public:
 	}
 
 	bool primeIncludes(string imp, string minTerm){
-		//cout << "comparing " << imp << " and " << minTerm << ":  ";
 		for (int i = 0; i < imp.size(); ++i){
 			if (imp[i]!='-'){
 				if(imp[i]!=minTerm[i]){
-					//cout << "false" << endl;
 					return false;
 				}
 			}
 		}
-		//cout << "true" << endl;
 		return true;
 	}
 
@@ -131,9 +128,9 @@ public:
 			minBin.push_back(util.intToBinString(nBits, x));
 		}
 
-		
+		cout << "\nBinary representation of provided min terms:" << endl;
 		for (int i = 0; i < nMin; ++i){
-			cout<<minBin[i] << endl;
+			cout << i << ") " << minBin[i] << endl;
 		}
 
 		table = vector< vector< string> >(nBits+1);
@@ -155,7 +152,7 @@ public:
 
     	cout << "\nThe Prime Implicants are:" << endl;
     	for (int i = 0; i < primeImp.size(); ++i){
-    		cout  << util.binToString(primeImp[i]) << endl;
+    		cout  << i << ") "<< util.binToString(primeImp[i]) << endl;
     	}
 
 	}
@@ -165,25 +162,25 @@ public:
 		bool primeImpChart[primeImp.size()][nMin] = {{false}};
 
 		for (int i = 0; i < primeImp.size(); ++i){
-		 	for (int j = 0; j < nMin; ++j){
-		 		primeImpChart[i][j] = util.primeIncludes(primeImp[i], minBin[j]);
-		 	}
-		 }
+			for (int j = 0; j < nMin; ++j){
+				primeImpChart[i][j] = util.primeIncludes(primeImp[i], minBin[j]);
+			}
+		}
 
-		 cout << "\nPrime Imp Chart:" << endl;
-		 for (int i = 0; i < primeImp.size(); ++i){
-		 	for (int j = 0; j < nMin; ++j){
+		 cout << "\nPrime implicants chart (rows: prime implicant no., col: minterm no.):" << endl;
+		for (int i = 0; i < primeImp.size(); ++i){
+			for (int j = 0; j < nMin; ++j){
 		 		if (primeImpChart[i][j] == true){
-		 			cout << "true  ";
+		 			cout << "1\t";
 		 		}
 		 		else {
-		 			cout << "false  ";
+		 			cout << "0\t";
 		 		}
 		 	}
 		 	cout << endl;
-		 }
+		}
 
-		 // patric logic
+		// petric logic
 		vector< set<int> > patLogic;
 		for (int j = 0; j < nMin; ++j){ // column iteration
 			set<int> x;
@@ -194,7 +191,7 @@ public:
 			}
 			patLogic.push_back(x);
 		}
-		cout << "\nPat logic is: " << endl;
+		cout << "\nPetric logic is (row: minterms no., col: prime implicants no.): " << endl;
 		for (int i = 0; i < patLogic.size(); ++i){
 			set<int > :: iterator itr;  // convert set to vector
 			for (itr = patLogic[i].begin(); itr != patLogic[i].end(); ++itr){
@@ -208,9 +205,9 @@ public:
 		set< set<int> > posComb;
 		set<int> prod;
 		getPosComb(patLogic, 0, prod, posComb);
-		int min = 999;
+		int min = 9999;
 
-		cout << "\nPossible combinations:" << endl;
+		cout << "\nPossible combinations that satisfy all minterms:" << endl;
 		set< set<int> > :: iterator itr1;
 		for (itr1 = posComb.begin(); itr1 != posComb.end(); ++itr1){
 			set<int> comb = *itr1;
@@ -225,7 +222,8 @@ public:
 	    	cout << endl;
 		}
 
-		//minimum combinations
+		cout << "\nGetting the combinations with min terms and min variables ..." << endl;
+		//Combinations with minimum terms
 		vector< set<int> > minComb;
 		set< set<int> > :: iterator itr;
 		for (itr = posComb.begin(); itr != posComb.end(); ++itr){
@@ -235,8 +233,8 @@ public:
 			}
 		}
 
-		// minimum variables
-		min = 999;
+		//Combinations with minimum variables
+		min = 9999;
 		for (int i = 0; i < minComb.size(); ++i){
 			if(util.getVar(minComb[i], primeImp) < min){
 				min = util.getVar(minComb[i], primeImp);
@@ -251,15 +249,16 @@ public:
 	}
 
 	void displayFunctions() {
-		cout << "\nThe possible functions are:" << endl;
+		cout << "\n\nThe possible functions are-\n" << endl;
 		for (int i = 0; i < functions.size(); ++i){
 			set<int> function = functions[i]; 
 			set<int> :: iterator itr;
+			cout << "Function " << i+1 << ":"<< endl;
 			for (itr = function.begin(); itr != function.end(); ++itr){
 				int x = *itr;
 				cout << util.binToString(primeImp[x]) << " + ";
 			}
-			cout << endl;
+			cout << "\b\b  \n" << endl;
 		}
 	}
 
