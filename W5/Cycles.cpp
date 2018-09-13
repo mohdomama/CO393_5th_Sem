@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -8,6 +9,7 @@ private:
     int **matrix; 
     int nNodes;
     vector< vector< int > > cycles;
+    vector< vector< int > > filteredCycles;
     bool *marked;
 
 public:
@@ -40,8 +42,45 @@ public:
             findCyclesFromNode(i, nodeCycle, i);
             clearNode(i);
         }
-        printCycles();        
-    }    
+
+        sort(cycles.begin(),cycles.end(),compVectors);
+
+        cout << "\n\nThe cycles are:" << endl;
+        printCycles(cycles);        
+    }   
+
+    void filterCycles() {
+        bool isSubSet[cycles.size()];
+        for (int i = 0; i < cycles.size(); ++i) {
+            isSubSet[i] = false;
+        }
+
+        for (int i = 0; i < cycles.size() - 1; ++i) {
+            for (int j = i+1; j < cycles.size(); ++j) {
+                if (!isSubSet[i]) {
+                    vector<int> set = cycles[i];
+                    vector<int> subSet = cycles[j];
+                   
+                    sort(set.begin(), set.end());
+                    sort(subSet.begin(), subSet.end());
+
+                    if ( includes(set.begin(), set.end(), subSet.begin(), subSet.end()) ) {
+                        isSubSet[j] = true;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < cycles.size(); ++i) {
+            if(!isSubSet[i]) {
+                filteredCycles.push_back(cycles[i]);
+            }
+        }
+
+        cout << "\n\nThe filtered cycles are:" << endl;
+        printCycles(filteredCycles);
+
+    } 
 
     void findCyclesFromNode(int node, vector< int > nodeCycle, int present) {
         nodeCycle.push_back(present);
@@ -68,12 +107,16 @@ public:
         }
     }
 
-    void printCycles() {
-        cout << "\n\nCycles are:" << endl;
+    static bool compVectors(const vector<int> & a,const vector<int> & b) {
+        return a.size() > b.size();
+    }
+
+    void printCycles(vector< vector< int > > cycles) {
         for (int i = 0; i < cycles.size(); ++i) {
             for (int j = 0; j < cycles[i].size(); ++j) {
-                cout << cycles[i][j] << "  ";
+                cout << cycles[i][j] << " --> ";
             }
+            cout << cycles[i][0];
             cout << endl;
         }
     }
@@ -83,5 +126,7 @@ int main(int argc, char const *argv[]){
     GraphCycles graphCycles;
     graphCycles.initialize();
     graphCycles.findCycles();
+    graphCycles.filterCycles();
+
     return 0;
 }
