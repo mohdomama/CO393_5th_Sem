@@ -44,9 +44,11 @@ public class HanoiTower {
             e.printStackTrace();
         }
     }
+
     public void playWait() {
         while(!CONS.play) sleep();
     }
+
     public void solveHanoi(int n, int source, int aux, int des) {
         if (n == 1) {
             playWait();
@@ -219,11 +221,12 @@ class HanoiPanel extends JPanel {
 
         g2d.setRenderingHints(rh);
 
-        int[] rodsSize = new int[Disks.num];
-        for (int i = 0; i < Disks.num; ++i) {
+        int[] rodsSize = new int[3];
+        for (int i = 0; i < 3; ++i) {
             rodsSize[i] = 0;
         }
-        for (int i = Disks.num - 1; i >= 0; --i){
+
+        for (int i = Disks.num - 1; i >= 0; i--){
             int rodNum = Disks.pos[i];
             int l = CONS.diskW - CONS.diskStep*(Disks.num -1 - i);
             int x = CONS.rodX - l/2 + CONS.rodW/2 + CONS.rodX*rodNum;
