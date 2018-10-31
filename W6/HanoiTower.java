@@ -16,7 +16,7 @@ class CONS {
     public static int diskH = 10;
     public static int diskSpace = 5;
     public static int diskStep = 20;
-    public static int sleep = 500;
+    public static int sleep = 10;
     public static boolean play = false;
 
 }
@@ -49,6 +49,7 @@ public class HanoiTower {
         while(!CONS.play) sleep();
     }
 
+    /*
     public void solveHanoi(int n, int source, int aux, int des) {
         if (n == 1) {
             playWait();
@@ -60,6 +61,7 @@ public class HanoiTower {
             solveHanoi(n - 1, aux, source, des);
         }
     }
+    */
 
     public void solveRestricted(int n, int source, int aux, int des) {
         if (n == 0)
@@ -90,7 +92,9 @@ public class HanoiTower {
     public void move(int n, int source, int des) {
         //System.out.println(source + " -> " + des);
         countSteps++;
+
         Disks.pos[n-1] = des;
+
         gui.redraw();
         sleep();
     }
@@ -101,11 +105,13 @@ public class HanoiTower {
 
         System.out.println("Solved in " + hanoiTower.countSteps + " steps!");
     }
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter number of disks:");
 
         Disks.num = input.nextInt();
+
         Disks.pos = new int[Disks.num];
 
         for (int i = 0; i < Disks.num; i++) {
@@ -127,6 +133,7 @@ class Gui {
         panel.revalidate();
         panel.repaint();
     }
+
     public void setup(HanoiTower hanoiTower) {
         this.hanoiTower = hanoiTower;
 
@@ -139,15 +146,19 @@ class Gui {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
+
         panel = new HanoiPanel();
         panel.setPreferredSize(new Dimension(CONS.frameW, 600));
+
         frame.add(panel, gbc);
+
 
         controlPanel = new JPanel();
         //controlPanel.setLayout(new );
 
         gbc.gridx = 0;
         gbc.gridy = 1;
+
         playButton = new JButton("Play/Pause");
         resetButton = new JButton("Reset");
 
@@ -176,6 +187,7 @@ class Gui {
 
 
         frame.add(controlPanel, gbc);
+
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -228,9 +240,13 @@ class HanoiPanel extends JPanel {
 
         for (int i = Disks.num - 1; i >= 0; i--){
             int rodNum = Disks.pos[i];
+
             int l = CONS.diskW - CONS.diskStep*(Disks.num -1 - i);
+
             int x = CONS.rodX - l/2 + CONS.rodW/2 + CONS.rodX*rodNum;
+
             int y = CONS.rodY + CONS.rodH - CONS.diskH*rodsSize[rodNum] - CONS.diskSpace*(rodsSize[rodNum]);
+
             g2d.fillRect(x, y, l, CONS.diskH);
             rodsSize[rodNum] += 1;
         }
