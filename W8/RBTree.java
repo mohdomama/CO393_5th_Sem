@@ -238,19 +238,19 @@ public class RBTree {
     public void deleteNode(Node node) {
         size--;
         Node y = node;
-        Node x;
+        Node x;                                 // x point to the original position of y
         boolean yOrgColor = y.color;
-        if (node.left == nil) {
+        if (node.left == nil) {                 // If node has only right child
             x = node.right;
             transplant(node, node.right);
         }
-        else if (node.right == nil) {
+        else if (node.right == nil) {           // If node has only left child
             x = node.left;
             transplant(node, node.left);
         }
 
         else {
-            y = treeMinimum(node.right);
+            y = treeMinimum(node.right);        // Find the successor of node
             yOrgColor = y.color;
             x = y.right;
 
@@ -278,25 +278,25 @@ public class RBTree {
             Node w;
             if (x == x.parent.left) {
                 w = x.parent.right;
-                if(w.color == RED) {
+                if(w.color == RED) {                                    // CASE 1: x's sibling is red
                     w.color = BLACK;
                     x.parent.color = RED;
                     leftRotate(x.parent);
                     w = x.parent.right;
                 }
-                if (w.left.color == BLACK && w.right.color == BLACK) {
+                if (w.left.color == BLACK && w.right.color == BLACK) {  // CASE 2: x's sibling is black and both if sibling's child are black
                     w.color = RED;
                     x = x.parent;
                 }
                 else {
-                    if (w.right.color == BLACK) {
+                    if (w.right.color == BLACK) {                       // CASE 3: x's sibling w is black. W's left red, right black
                         w.left.color = BLACK;
                         w.color = RED;
                         rightRotate(w);
                         w = x.parent.right;
 
                     }
-                    w.color = x.parent.color;
+                    w.color = x.parent.color;                           // CASE 4: x's sibling is balck. W's right child is red.
                     x.parent.color = BLACK;
                     w.right.color = BLACK;
                     leftRotate(x.parent);
@@ -368,7 +368,7 @@ public class RBTree {
             return;
         }
         printTree(node.left);
-        System.out.println("Value: " + node.vrTime + " \t| Left Child: " + node.left.vrTime + " \t| Right Child: " + node.right.vrTime + "\t| Color: " + (node.color ? "BLACK":"RED"));
+        System.out.println("Value: " + node.pid + " \t| Left Child: " + node.left.pid + " \t| Right Child: " + node.right.pid + "\t| Color: " + (node.color ? "BLACK":"RED"));
         printTree(node.right);
 
     }
@@ -391,7 +391,9 @@ public class RBTree {
                 if (min.rTime > 0) {
                     insertNode(min);
                 }
+                printTree();
             }
+
         }
     }
 
